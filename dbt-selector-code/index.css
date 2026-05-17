@@ -1,0 +1,142 @@
+:root {
+  /* Colors */
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #666666;
+  --color-text-tertiary: #999999;
+  --color-text-danger: #d32f2f;
+  --color-text-success: #00695c;
+  --color-text-info: #1565c0;
+  
+  --color-background-primary: #ffffff;
+  --color-background-secondary: #f5f5f5;
+  --color-background-info: #e3f2fd;
+  --color-background-success: #e0f2f1;
+  --color-background-danger: #ffebee;
+  
+  --color-border-primary: #e0e0e0;
+  --color-border-secondary: #cccccc;
+  --color-border-tertiary: #bbbbbb;
+  --color-border-info: #64b5f6;
+  --color-border-success: #80cbc4;
+  --color-border-danger: #e57373;
+  
+  /* Typography */
+  --font-mono: 'Monaco', 'Courier New', monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  
+  /* Spacing */
+  --border-radius-md: 6px;
+  --border-radius-lg: 8px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  background-color: var(--color-background-primary);
+  color: var(--color-text-primary);
+  line-height: 1.5;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+}
+
+#root {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Component: Label */
+label {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+label:hover {
+  background-color: var(--color-background-secondary);
+}
+
+/* Component: Input */
+input[type="text"],
+input[type="file"] {
+  font-family: var(--font-sans);
+  padding: 8px;
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-md);
+  font-size: 13px;
+}
+
+input[type="text"]:focus,
+input[type="file"]:focus {
+  outline: none;
+  border-color: var(--color-border-info);
+  box-shadow: 0 0 0 2px rgba(21, 101, 192, 0.1);
+}
+
+/* Component: Button */
+button {
+  font-family: var(--font-sans);
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* Component: Checkbox & Radio */
+input[type="checkbox"],
+input[type="radio"] {
+  cursor: pointer;
+  margin: 0;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-tertiary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-secondary);
+}
+
+/* Code/Monospace */
+code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background-color: var(--color-background-secondary);
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #root {
+    padding: 1rem;
+  }
+
+  div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+}
