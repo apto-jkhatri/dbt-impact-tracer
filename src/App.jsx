@@ -113,6 +113,24 @@ function App() {
       .filter(Boolean)
       .sort();
 
+    // Build path model details for DAG visualization
+    const pathModelSetIds = new Set(pathModels);
+    const pathModelDetails = pathModels
+      .map(id => {
+        const m = modelMap.get(id);
+        if (!m) return null;
+        let type = 'intermediate';
+        if (sources.has(id)) type = 'source';
+        else if (targets.has(id)) type = 'target';
+        return {
+          id,
+          name: m.name,
+          type,
+          depends_on: m.depends_on.filter(dep => pathModelSetIds.has(dep))
+        };
+      })
+      .filter(Boolean);
+
     return {
       success: pathModels.length > 0,
       sourceCount: sources.size,
@@ -122,6 +140,7 @@ function App() {
       sourceNames,
       targetNames,
       allPathNames: pathNames,
+      pathModelDetails,
       command: `dbt build --select ${pathNames.join(' ')}`
     };
   };

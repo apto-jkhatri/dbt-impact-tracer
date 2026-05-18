@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ImpactDAG from './ImpactDAG';
 
 function ImpactAnalyzer({ results }) {
   const [copied, setCopied] = useState(false);
@@ -128,7 +129,31 @@ function ImpactAnalyzer({ results }) {
         </div>
       </div>
 
-      {/* Impact Path Visualization */}
+      {/* DAG Visualization */}
+      <div style={{ marginBottom: '1.5rem' }}>
+        <div style={{
+          fontWeight: 500,
+          fontSize: '14px',
+          marginBottom: '12px',
+          color: 'var(--color-text-primary)'
+        }}>
+          Dependency graph
+        </div>
+        <ImpactDAG pathModelDetails={results.pathModelDetails} />
+        <div style={{
+          display: 'flex',
+          gap: '16px',
+          marginTop: '8px',
+          fontSize: '11px',
+          color: 'var(--color-text-secondary)'
+        }}>
+          <span><span style={{ display: 'inline-block', width: '10px', height: '10px', background: 'var(--color-background-info)', border: '1px solid var(--color-border-info)', borderRadius: '2px', marginRight: '4px', verticalAlign: 'middle' }} /> Source</span>
+          <span><span style={{ display: 'inline-block', width: '10px', height: '10px', background: 'var(--color-background-primary)', border: '1px solid var(--color-border-secondary)', borderRadius: '2px', marginRight: '4px', verticalAlign: 'middle' }} /> Intermediate</span>
+          <span><span style={{ display: 'inline-block', width: '10px', height: '10px', background: 'var(--color-background-success)', border: '1px solid var(--color-border-success)', borderRadius: '2px', marginRight: '4px', verticalAlign: 'middle' }} /> Target</span>
+        </div>
+      </div>
+
+      {/* Impact Path (linear) */}
       <div style={{ marginBottom: '1.5rem' }}>
         <div style={{
           fontWeight: 500,
