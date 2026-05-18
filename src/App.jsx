@@ -164,7 +164,10 @@ function App() {
   return (
     <div className="app-container">
       <header className="app-header">
-        <h1>dbt Impact Tracer</h1>
+        <h1 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+          <img src="/dbt-icon.png" alt="dbt logo" style={{ width: '32px', height: '32px' }} />
+          dbt Impact Tracer
+        </h1>
         <p>Visualize dependency paths and run only the models affected by your changes</p>
       </header>
 
