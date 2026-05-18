@@ -6,7 +6,6 @@ import { analyzeImpactPath } from './utils/graphTraversal';
 
 function App() {
   const linkedInUrl = 'https://www.linkedin.com/in/jaydeepkhatri/';
-  const buyMeACoffeeUrl = 'https://www.buymeacoffee.com/aptojkhatri';
 
   const [manifest, setManifest] = useState(null);
   const [allModels, setAllModels] = useState([]);
@@ -199,24 +198,6 @@ function App() {
             Jaydeep Khatri
           </a>
         </p>
-        <a
-          href={buyMeACoffeeUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            display: 'inline-block',
-            marginTop: '6px',
-            padding: '8px 14px',
-            borderRadius: '999px',
-            background: '#FFDD00',
-            color: '#1c1c1c',
-            fontWeight: 600,
-            fontSize: '12px',
-            textDecoration: 'none'
-          }}
-        >
-          Buy Me a Coffee
-        </a>
       </footer>
     </div>
   );

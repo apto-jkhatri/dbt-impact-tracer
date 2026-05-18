@@ -147,7 +147,6 @@ Special thanks to my coworkers at **Aptologics** who tested this tool and provid
 
 - 🐛 [Report Issues](https://github.com/apto-jkhatri/dbt-impact-tracer/issues)
 - ❤️ [Sponsor on GitHub](https://github.com/sponsors/apto-jkhatri)
-- ☕ [Buy Me a Coffee](https://www.buymeacoffee.com/aptojkhatri)
 
 ---
 
