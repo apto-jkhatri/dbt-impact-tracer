@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function ImpactAnalyzer({ results, totalModels = 400 }) {
+function ImpactAnalyzer({ results }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -37,9 +37,11 @@ function ImpactAnalyzer({ results, totalModels = 400 }) {
     );
   }
 
-  const savePercentage = Math.round(
-    (1 - results.pathCount / totalModels) * 100
-  );
+  // Compare against source+ (what `dbt build -s model+` would rebuild)
+  const sourcePlusCount = results.sourcePlusCount || results.pathCount;
+  const savePercentage = sourcePlusCount > 0 
+    ? Math.round((1 - results.pathCount / sourcePlusCount) * 100)
+    : 0;
 
   return (
     <div>
@@ -60,7 +62,7 @@ function ImpactAnalyzer({ results, totalModels = 400 }) {
         </div>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: '1fr 1fr 1fr',
+          gridTemplateColumns: '1fr 1fr 1fr 1fr',
           gap: '12px'
         }}>
           <div>
@@ -76,6 +78,21 @@ function ImpactAnalyzer({ results, totalModels = 400 }) {
               color: 'var(--color-text-secondary)'
             }}>
               source models
+            </div>
+          </div>
+          <div>
+            <div style={{
+              fontSize: '24px',
+              fontWeight: 500,
+              color: 'var(--color-text-danger)'
+            }}>
+              {sourcePlusCount}
+            </div>
+            <div style={{
+              fontSize: '12px',
+              color: 'var(--color-text-secondary)'
+            }}>
+              source+ models
             </div>
           </div>
           <div>
@@ -105,7 +122,7 @@ function ImpactAnalyzer({ results, totalModels = 400 }) {
               fontSize: '12px',
               color: 'var(--color-text-secondary)'
             }}>
-              saved vs full rebuild
+              saved vs source+
             </div>
           </div>
         </div>

@@ -70,6 +70,23 @@ function App() {
     // Use the extracted algorithm
     const pathModels = analyzeImpactPath(sources, target, models);
 
+    // Calculate source+ count (all models downstream of sources)
+    // This simulates what `dbt build -s source+` would rebuild
+    const sourcePlusModels = new Set(sources);
+    const queue = Array.from(sources);
+    const visited = new Set(sources);
+
+    while (queue.length > 0) {
+      const current = queue.shift();
+      models.forEach(model => {
+        if (!visited.has(model.uniqueId) && model.depends_on.includes(current)) {
+          visited.add(model.uniqueId);
+          sourcePlusModels.add(model.uniqueId);
+          queue.push(model.uniqueId);
+        }
+      });
+    }
+
     const pathNames = pathModels
       .map(id => modelMap.get(id)?.name)
       .filter(Boolean)
@@ -87,6 +104,7 @@ function App() {
       success: pathModels.length > 0,
       sourceCount: selectedSources.size,
       pathCount: pathNames.length,
+      sourcePlusCount: sourcePlusModels.size,
       sourceNames,
       targetName,
       allPathNames: pathNames,
@@ -184,7 +202,7 @@ function App() {
             </button>
 
             {analysisResults && (
-              <ImpactAnalyzer results={analysisResults} totalModels={allModels.length} />
+              <ImpactAnalyzer results={analysisResults} />
             )}
           </>
         )}
