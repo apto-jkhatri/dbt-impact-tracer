@@ -183,7 +183,7 @@ function ImpactAnalyzer({ results }) {
 
           {/* Intermediate Models */}
           {results.allPathNames
-            .filter(name => !results.sourceNames.includes(name) && name !== results.targetName)
+            .filter(name => !results.sourceNames.includes(name) && !results.targetNames.includes(name))
             .map((name, idx) => (
               <React.Fragment key={`inter-${idx}`}>
                 <div style={{
@@ -202,18 +202,27 @@ function ImpactAnalyzer({ results }) {
               </React.Fragment>
             ))}
 
-          {/* Target Model */}
-          <div style={{
-            padding: '8px 12px',
-            background: 'var(--color-background-success)',
-            color: 'var(--color-text-success)',
-            border: '0.5px solid var(--color-border-success)',
-            borderRadius: 'var(--border-radius-md)',
-            fontSize: '12px',
-            fontWeight: 500
-          }}>
-            {results.targetName}
-          </div>
+          {/* Target Models */}
+          {results.targetNames.map((name, idx) => (
+            <React.Fragment key={`target-${idx}`}>
+              <div style={{
+                padding: '8px 12px',
+                background: 'var(--color-background-success)',
+                color: 'var(--color-text-success)',
+                border: '0.5px solid var(--color-border-success)',
+                borderRadius: 'var(--border-radius-md)',
+                fontSize: '12px',
+                fontWeight: 500
+              }}>
+                {name}
+              </div>
+              {idx < results.targetNames.length - 1 && (
+                <div style={{ color: 'var(--color-text-tertiary)' }}>
+                  ,
+                </div>
+              )}
+            </React.Fragment>
+          ))}
         </div>
       </div>
 

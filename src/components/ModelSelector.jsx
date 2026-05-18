@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 function ModelSelector({
   allModels,
   selectedSources,
-  selectedTarget,
+  selectedTargets,
   onSourceToggle,
-  onTargetSelect
+  onTargetToggle
 }) {
   const [sourceSearch, setSourceSearch] = useState('');
   const [targetSearch, setTargetSearch] = useState('');
@@ -107,9 +107,9 @@ function ModelSelector({
           color: 'var(--color-text-primary)'
         }}>
           Target model (check effect)
-          {selectedTarget && (
+          {selectedTargets.size > 0 && (
             <span style={{ fontWeight: 400, color: 'var(--color-text-success)', marginLeft: '8px' }}>
-              1 selected
+              {selectedTargets.size} selected
             </span>
           )}
         </label>
@@ -152,16 +152,15 @@ function ModelSelector({
                   padding: '6px',
                   borderRadius: 'var(--border-radius-md)',
                   marginBottom: '4px',
-                  backgroundColor: selectedTarget === model.uniqueId
+                  backgroundColor: selectedTargets.has(model.uniqueId)
                     ? 'var(--color-background-success)'
                     : 'transparent'
                 }}
               >
                 <input
-                  type="radio"
-                  name="target"
-                  checked={selectedTarget === model.uniqueId}
-                  onChange={() => onTargetSelect(model.uniqueId)}
+                  type="checkbox"
+                  checked={selectedTargets.has(model.uniqueId)}
+                  onChange={() => onTargetToggle(model.uniqueId)}
                   style={{ cursor: 'pointer' }}
                 />
                 <span>{model.name}</span>

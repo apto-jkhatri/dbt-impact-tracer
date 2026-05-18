@@ -10,7 +10,7 @@ function App() {
   const [manifest, setManifest] = useState(null);
   const [allModels, setAllModels] = useState([]);
   const [selectedSources, setSelectedSources] = useState(new Set());
-  const [selectedTarget, setSelectedTarget] = useState(null);
+  const [selectedTargets, setSelectedTargets] = useState(new Set());
   const [analysisResults, setAnalysisResults] = useState(null);
   const [selectorResetKey, setSelectorResetKey] = useState(0);
 
@@ -19,7 +19,7 @@ function App() {
     const models = extractModels(parsedManifest);
     setAllModels(models);
     setSelectedSources(new Set());
-    setSelectedTarget(null);
+    setSelectedTargets(new Set());
     setAnalysisResults(null);
   };
 
@@ -46,8 +46,14 @@ function App() {
     setSelectedSources(newSources);
   };
 
-  const handleTargetSelect = (modelId) => {
-    setSelectedTarget(selectedTarget === modelId ? null : modelId);
+  const handleTargetToggle = (modelId) => {
+    const newTargets = new Set(selectedTargets);
+    if (newTargets.has(modelId)) {
+      newTargets.delete(modelId);
+    } else {
+      newTargets.add(modelId);
+    }
+    setSelectedTargets(newTargets);
   };
 
   const handleAnalyze = () => {
@@ -55,20 +61,25 @@ function App() {
       alert('Please select at least one source model');
       return;
     }
-    if (!selectedTarget) {
-      alert('Please select a target model');
+    if (selectedTargets.size === 0) {
+      alert('Please select at least one target model');
       return;
     }
 
-    const results = analyzeImpact(selectedSources, selectedTarget, allModels);
+    const results = analyzeImpact(selectedSources, selectedTargets, allModels);
     setAnalysisResults(results);
   };
 
-  const analyzeImpact = (sources, target, models) => {
+  const analyzeImpact = (sources, targets, models) => {
     const modelMap = new Map(models.map(m => [m.uniqueId, m]));
 
-    // Use the extracted algorithm
-    const pathModels = analyzeImpactPath(sources, target, models);
+    // Run analysis for each target and union the results
+    const pathModelSet = new Set();
+    targets.forEach(target => {
+      const pathForTarget = analyzeImpactPath(sources, target, models);
+      pathForTarget.forEach(id => pathModelSet.add(id));
+    });
+    const pathModels = Array.from(pathModelSet);
 
     // Calculate source+ count (all models downstream of sources)
     // This simulates what `dbt build -s source+` would rebuild
@@ -97,16 +108,19 @@ function App() {
       .filter(Boolean)
       .sort();
 
-    const targetModel = modelMap.get(target);
-    const targetName = targetModel?.name;
+    const targetNames = Array.from(targets)
+      .map(id => modelMap.get(id)?.name)
+      .filter(Boolean)
+      .sort();
 
     return {
       success: pathModels.length > 0,
-      sourceCount: selectedSources.size,
+      sourceCount: sources.size,
+      targetCount: targets.size,
       pathCount: pathNames.length,
       sourcePlusCount: sourcePlusModels.size,
       sourceNames,
-      targetName,
+      targetNames,
       allPathNames: pathNames,
       command: `dbt build --select ${pathNames.join(' ')}`
     };
@@ -116,14 +130,14 @@ function App() {
     setManifest(null);
     setAllModels([]);
     setSelectedSources(new Set());
-    setSelectedTarget(null);
+    setSelectedTargets(new Set());
     setAnalysisResults(null);
     setSelectorResetKey(prev => prev + 1);
   };
 
   const handleSelectionReset = () => {
     setSelectedSources(new Set());
-    setSelectedTarget(null);
+    setSelectedTargets(new Set());
     setAnalysisResults(null);
     setSelectorResetKey(prev => prev + 1);
   };
@@ -178,9 +192,9 @@ function App() {
               key={selectorResetKey}
               allModels={allModels}
               selectedSources={selectedSources}
-              selectedTarget={selectedTarget}
+              selectedTargets={selectedTargets}
               onSourceToggle={handleSourceToggle}
-              onTargetSelect={handleTargetSelect}
+              onTargetToggle={handleTargetToggle}
             />
 
             <button
