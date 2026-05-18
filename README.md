@@ -1,241 +1,154 @@
-# README
+# dbt Impact Tracer
 
-## dbt Impact Tracer
-
-> Visualize dbt dependency paths and run only the models affected by your changes.
-
-**Problem:** With 100+ dbt models, running `dbt build -s model+` can rebuild 200+ models when you only changed one intermediate model.
-
-**Solution:** dbt Impact Tracer finds the **minimal set of models** you actually need to rebuild.
+> Run only the dbt models affected by your changes. Stop rebuilding everything.
 
 ---
 
-## ✨ Features
+## The Problem
 
-- 🎯 **Two-way model selection** — Select source models (what you changed) and target model (what you want to verify)
-- 📊 **Smart graph traversal** — Finds all paths between sources and target in your dependency graph
-- ⚡ **Instant commands** — Auto-generates optimized `dbt build --select` commands
-- 🏠 **Works locally** — Everything runs in your browser, no cloud required
-- 📦 **Zero external dependencies** — Core algorithm is pure JavaScript
-- 🔄 **Offline support** — No analytics, no tracking, completely private
+In large dbt projects (100+ models), a small change to one model can trigger a massive rebuild. Running `dbt build -s model+` often rebuilds 200+ models when only 4 actually need updating.
 
----
+**This wastes time, compute, and slows down development.**
 
-## 🚀 Quick Start
+## The Solution
 
-### Online Demo (No Installation)
+dbt Impact Tracer analyzes your project's dependency graph and tells you exactly which models to rebuild. You get a ready-to-use `dbt build --select` command with only the models that matter.
 
-Visit: **[dbt-impact-tracer.dev](https://dbt-impact-tracer.dev)**
-
-### Local Installation
-
-```bash
-# Clone repository
-git clone https://github.com/apto-jkhatri/dbt-impact-tracer.git
-cd dbt-impact-tracer
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
-# Opens at http://localhost:5173
-```
+**Result:** 98% faster builds during development.
 
 ---
 
-## 📖 How to Use
+## How It Helps During Development
 
-### Step 1: Generate manifest.json
+When you're working on a dbt project:
+
+1. You change a model (e.g., `fct_payments`)
+2. You want to test if it breaks a downstream model (e.g., `union_mrr`)
+3. Instead of rebuilding everything, this tool finds the minimal path between them
+4. You run only those 4-5 models instead of 240
+
+**Before:** 45 minutes waiting for a full rebuild  
+**After:** 2-3 minutes for targeted rebuild
+
+---
+
+## Try It Now (Free, No Installation)
+
+**[Open dbt Impact Tracer](https://dbt-impact-tracer.dev)**
+
+Use the hosted version directly in your browser. No setup, no installation, completely free.
+
+Your manifest.json never leaves your browser—everything runs locally.
+
+---
+
+## How to Use
+
+### Step 1: Get your manifest
 
 ```bash
 cd your_dbt_project
 dbt compile
-# Creates: target/manifest.json
 ```
 
-### Step 2: Open dbt Impact Tracer
+This creates `target/manifest.json`.
 
-Visit [dbt-impact-tracer.dev](https://dbt-impact-tracer.dev) or run locally
+### Step 2: Upload it
 
-### Step 3: Upload manifest.json
+Open [dbt-impact-tracer.dev](https://dbt-impact-tracer.dev) and upload your manifest.
 
-Click the upload area and select your `target/manifest.json` file
+### Step 3: Select models
 
-### Step 4: Select Models
+- **Left side:** Check the models you changed (source models)
+- **Right side:** Select the model you want to verify (target model)
 
-**Left panel (Source models):**
-- Check the models you changed
-- Example: `fct_monthly_payments`, `fct_monthly_voip`
+### Step 4: Get your command
 
-**Right panel (Target model):**
-- Select one model to check impact
-- Example: `union_monthly_mrr_evolution_model`
-
-### Step 5: Trace Impact
-
-Click **"Show impact path"** to see:
-- Number of models affected
-- Dependency chain visualization
-- Optimized `dbt build --select` command
-
-### Step 6: Run in dbt
-
-Copy the command and run:
+Click **"Show impact path"** and copy the generated command:
 
 ```bash
-dbt build --select fct_monthly_payments fct_monthly_voip inter_calc union_mrr
+dbt build --select fct_payments inter_calc union_mrr
 ```
 
-**Instead of 240 models → 4 models** ✅
+### Step 5: Run it
+
+Paste and run. Done.
 
 ---
 
-## 📊 Example
+## Example
 
-### Before (Without Impact Tracer)
+**Without Impact Tracer:**
 ```bash
-dbt build -s fct_payments+ fct_voip+
-# Rebuilds: 240+ models 😱
-# Time: 45+ minutes
+dbt build -s fct_payments+
+# Rebuilds 240 models
+# Takes 45 minutes
 ```
 
-### After (With Impact Tracer)
+**With Impact Tracer:**
 ```bash
-dbt build --select fct_payments fct_voip inter_calc union_mrr
-# Rebuilds: 4 models ✨
-# Time: 2-3 minutes
-# Savings: ~98% faster
+dbt build --select fct_payments inter_calc union_mrr
+# Rebuilds 4 models
+# Takes 3 minutes
 ```
 
 ---
 
-## 🔧 How It Works
+## Run Locally (Optional)
 
-### Algorithm: Two-Pass Graph Traversal
+If you prefer running it on your machine:
 
-1. **Backward Pass** — From target, find all dependencies leading to it
-2. **Forward Pass** — From sources, find all models reachable from them
-3. **Intersection** — Return models in both sets = minimal path
-
-**Time Complexity:** O(V + E) where V = models, E = dependencies
-
-**Space Complexity:** O(V)
-
-### Example
-
-```
-Sources:        fct_a, fct_b
-                  ↓      ↓
-Intermediates:  inter_a, inter_b
-                  ↓      ↓
-Unrelated:      other_a  (not in path)
-                
-Target:         union_model ✓
-
-Result: [fct_a, fct_b, inter_a, inter_b, union_model]
-Excluded: [other_a] (not reachable from sources)
-```
-
----
-
-## 📦 Distribution
-
-### npm Package
 ```bash
-npm install -g dbt-impact-tracer
-dbt-impact-tracer
-```
-
-### Vercel Hosting
-```
-https://dbt-impact-tracer.dev
-```
-
-### Docker (Coming Soon)
-```bash
-docker run -p 5173:5173 dbt-impact-tracer
-```
-
----
-
-## 🛠️ Development
-
-### Setup
-```bash
+git clone https://github.com/apto-jkhatri/dbt-impact-tracer.git
+cd dbt-impact-tracer
 npm install
-npm run dev       # Start dev server
-npm test          # Run tests (watch)
-npm test -- --run # Run tests once
-npm run lint      # Check code style
-npm run build     # Production build
+npm run dev
 ```
 
-### Project Structure
-```
-dbt-impact-tracer/
-├── src/
-│   ├── components/
-│   │   ├── ManifestUploader.jsx
-│   │   ├── ModelSelector.jsx
-│   │   └── ImpactAnalyzer.jsx
-│   ├── utils/
-│   │   └── graphTraversal.js      # Core algorithm
-│   ├── styles/
-│   │   └── main.css
-│   ├── App.jsx
-│   └── main.jsx
-├── public/
-│   ├── index.html
-│   └── favicon.svg
-├── tests/
-│   └── graphTraversal.test.js
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-├── package.json
-├── vite.config.js
-├── .eslintrc.json
-└── README.md
-```
+Opens at http://localhost:5173
 
 ---
 
-## 🤝 Contributing
+## How It Works
 
-We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+The tool uses a two-pass graph traversal:
 
-**Ways to contribute:**
-- Report bugs
-- Suggest features
-- Improve documentation
-- Write tests
-- Submit code improvements
+1. **Backward pass:** From target, find all upstream dependencies
+2. **Forward pass:** From sources, find all downstream models
+3. **Intersection:** Models in both sets = the minimal rebuild path
 
----
-
-## 📄 License
-
-MIT License - see [LICENSE](./LICENSE) file
+This runs in O(V+E) time, so it's fast even for 1000+ model projects.
 
 ---
 
-## 🙏 Acknowledgments
+## Contributing
 
-Built for the dbt community. Inspired by the need to optimize large dbt projects.
+Found a bug or have an idea? Open an issue or submit a PR.
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
 ---
 
-## 📞 Support
+## License
 
-- 📖 [Documentation](#)
+MIT License - see [LICENSE](./LICENSE)
+
+---
+
+## Acknowledgments
+
+Built for the dbt community.
+
+Special thanks to my coworkers at **Aptologics** who tested this tool and provided valuable feedback during development.
+
+---
+
+## Support
+
 - 🐛 [Report Issues](https://github.com/apto-jkhatri/dbt-impact-tracer/issues)
-- 💬 [Discussions](https://github.com/apto-jkhatri/dbt-impact-tracer/discussions)
-- 🌐 [Website](https://dbt-impact-tracer.dev)
 - ❤️ [Sponsor on GitHub](https://github.com/sponsors/apto-jkhatri)
 - ☕ [Buy Me a Coffee](https://www.buymeacoffee.com/aptojkhatri)
 
 ---
 
-**Made with ❤️ for the dbt community**
+**Made with ❤️ by [Jaydeep Khatri](https://www.linkedin.com/in/jaydeepkhatri/)**
