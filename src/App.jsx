@@ -5,6 +5,9 @@ import ImpactAnalyzer from './components/ImpactAnalyzer';
 import { analyzeImpactPath } from './utils/graphTraversal';
 
 function App() {
+  const linkedInUrl = 'https://www.linkedin.com/in/jaydeep-khatri/';
+  const buyMeACoffeeUrl = 'https://www.buymeacoffee.com/aptojkhatri';
+
   const [manifest, setManifest] = useState(null);
   const [allModels, setAllModels] = useState([]);
   const [selectedSources, setSelectedSources] = useState(new Set());
@@ -190,6 +193,30 @@ function App() {
 
       <footer style={{ marginTop: '2rem', paddingTop: '1rem', borderTop: '1px solid var(--color-border-primary)', textAlign: 'center', fontSize: '12px', color: 'var(--color-text-tertiary)' }}>
         <p>Open source • <a href="https://github.com/apto-jkhatri/dbt-impact-tracer" target="_blank" rel="noopener noreferrer">GitHub</a> • MIT License</p>
+        <p>
+          Made with Love by{' '}
+          <a href={linkedInUrl} target="_blank" rel="noopener noreferrer">
+            Jaydeep Khatri
+          </a>
+        </p>
+        <a
+          href={buyMeACoffeeUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            display: 'inline-block',
+            marginTop: '6px',
+            padding: '8px 14px',
+            borderRadius: '999px',
+            background: '#FFDD00',
+            color: '#1c1c1c',
+            fontWeight: 600,
+            fontSize: '12px',
+            textDecoration: 'none'
+          }}
+        >
+          Buy Me a Coffee
+        </a>
       </footer>
     </div>
   );
