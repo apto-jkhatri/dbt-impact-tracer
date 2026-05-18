@@ -164,7 +164,7 @@ function App() {
       </main>
 
       <footer style={{ marginTop: '2rem', paddingTop: '1rem', borderTop: '1px solid var(--color-border-primary)', textAlign: 'center', fontSize: '12px', color: 'var(--color-text-tertiary)' }}>
-        <p>Open source • <a href="https://github.com/your-username/dbt-impact-tracer" target="_blank" rel="noopener noreferrer">GitHub</a> • MIT License</p>
+        <p>Open source • <a href="https://github.com/apto-jkhatri/dbt-impact-tracer" target="_blank" rel="noopener noreferrer">GitHub</a> • MIT License</p>
       </footer>
     </div>
   );
