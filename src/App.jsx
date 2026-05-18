@@ -10,6 +10,7 @@ function App() {
   const [selectedSources, setSelectedSources] = useState(new Set());
   const [selectedTarget, setSelectedTarget] = useState(null);
   const [analysisResults, setAnalysisResults] = useState(null);
+  const [selectorResetKey, setSelectorResetKey] = useState(0);
 
   const handleManifestUpload = (parsedManifest) => {
     setManifest(parsedManifest);
@@ -97,6 +98,14 @@ function App() {
     setSelectedSources(new Set());
     setSelectedTarget(null);
     setAnalysisResults(null);
+    setSelectorResetKey(prev => prev + 1);
+  };
+
+  const handleSelectionReset = () => {
+    setSelectedSources(new Set());
+    setSelectedTarget(null);
+    setAnalysisResults(null);
+    setSelectorResetKey(prev => prev + 1);
   };
 
   return (
@@ -115,22 +124,38 @@ function App() {
               <span style={{ fontSize: '13px', color: 'var(--color-text-secondary)' }}>
                 {allModels.length} models loaded
               </span>
-              <button
-                onClick={handleReset}
-                style={{
-                  padding: '6px 12px',
-                  fontSize: '12px',
-                  background: 'transparent',
-                  border: '1px solid var(--color-border-secondary)',
-                  borderRadius: 'var(--border-radius-md)',
-                  cursor: 'pointer'
-                }}
-              >
-                Upload new manifest
-              </button>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button
+                  onClick={handleSelectionReset}
+                  style={{
+                    padding: '6px 12px',
+                    fontSize: '12px',
+                    background: 'transparent',
+                    border: '1px solid var(--color-border-secondary)',
+                    borderRadius: 'var(--border-radius-md)',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Reset selections
+                </button>
+                <button
+                  onClick={handleReset}
+                  style={{
+                    padding: '6px 12px',
+                    fontSize: '12px',
+                    background: 'transparent',
+                    border: '1px solid var(--color-border-secondary)',
+                    borderRadius: 'var(--border-radius-md)',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Upload new manifest
+                </button>
+              </div>
             </div>
 
             <ModelSelector
+              key={selectorResetKey}
               allModels={allModels}
               selectedSources={selectedSources}
               selectedTarget={selectedTarget}
