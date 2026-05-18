@@ -5,7 +5,7 @@ import ImpactAnalyzer from './components/ImpactAnalyzer';
 import { analyzeImpactPath } from './utils/graphTraversal';
 
 function App() {
-  const linkedInUrl = 'https://www.linkedin.com/in/jaydeep-khatri/';
+  const linkedInUrl = 'https://www.linkedin.com/in/jaydeepkhatri/';
   const buyMeACoffeeUrl = 'https://www.buymeacoffee.com/aptojkhatri';
 
   const [manifest, setManifest] = useState(null);
