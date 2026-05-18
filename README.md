@@ -31,7 +31,7 @@ Visit: **[dbt-impact-tracer.dev](https://dbt-impact-tracer.dev)**
 
 ```bash
 # Clone repository
-git clone https://github.com/your-username/dbt-impact-tracer.git
+git clone https://github.com/apto-jkhatri/dbt-impact-tracer.git
 cd dbt-impact-tracer
 
 # Install dependencies
@@ -233,6 +233,8 @@ Built for the dbt community. Inspired by the need to optimize large dbt projects
 - 🐛 [Report Issues](https://github.com/apto-jkhatri/dbt-impact-tracer/issues)
 - 💬 [Discussions](https://github.com/apto-jkhatri/dbt-impact-tracer/discussions)
 - 🌐 [Website](https://dbt-impact-tracer.dev)
+- ❤️ [Sponsor on GitHub](https://github.com/sponsors/apto-jkhatri)
+- ☕ [Buy Me a Coffee](https://www.buymeacoffee.com/aptojkhatri)
 
 ---
 
