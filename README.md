@@ -1,102 +1,150 @@
 # dbt Impact Tracer
 
-> Run only the dbt models affected by your changes. Stop rebuilding everything.
+> Built for dbt developers. Stop rebuilding hundreds of models when only a few are actually affected by your change.
+
+**[🚀 Try it now — free, no installation](https://dbt-impact-tracer.dev)**
 
 ---
 
-## The Problem
+## Who This Is For
 
-In large dbt projects (100+ models), a small change to one model can trigger a massive rebuild. Running `dbt build -s model+` often rebuilds 200+ models when only 4 actually need updating.
+This is a **dev-time productivity tool** for dbt developers.
 
-**This wastes time, compute, and slows down development.**
+If you've ever:
+- Made a small change to a model and watched `dbt build -s model+` rebuild 200+ models for 45 minutes
+- Wanted to test if your change breaks a specific downstream report without rebuilding everything in between
+- Wished `dbt build` was smarter about what it actually needs to run
 
-## The Solution
-
-dbt Impact Tracer analyzes your project's dependency graph and tells you exactly which models to rebuild. You get a ready-to-use `dbt build --select` command with only the models that matter.
-
-**Result:** 98% faster builds during development.
-
----
-
-## How It Helps During Development
-
-When you're working on a dbt project:
-
-1. You change a model (e.g., `fct_payments`)
-2. You want to test if it breaks a downstream model (e.g., `union_mrr`)
-3. Instead of rebuilding everything, this tool finds the minimal path between them
-4. You run only those 4-5 models instead of 240
-
-**Before:** 45 minutes waiting for a full rebuild  
-**After:** 2-3 minutes for targeted rebuild
+…this tool is for you.
 
 ---
 
-## Try It Now (Free, No Installation)
+## The Problem It Solves
 
-**[Open dbt Impact Tracer](https://dbt-impact-tracer.dev)**
+When you change a dbt model during development and want to verify it correctly flows into a specific downstream model, you usually run something like:
 
-Use the hosted version directly in your browser. No setup, no installation, completely free.
+```bash
+dbt build -s fct_payments+
+```
 
-Your manifest.json never leaves your browser—everything runs locally.
+This rebuilds the **entire downstream lineage** — every model that depends on `fct_payments`, plus all the intermediate transformation models along the way. In larger projects, this can easily mean rebuilding hundreds of models even when only a handful are actually relevant to your change.
+
+**The cost:** time, compute, and slower iteration during development.
 
 ---
 
-## How to Use
+## What This Tool Does
 
-### Step 1: Get your manifest
+It finds the **minimal path** between two specific points in your dbt DAG:
+
+- **Source** = the model(s) you changed
+- **Target** = the downstream model(s) you want to verify
+
+It returns a ready-to-use `dbt build --select` command containing only the models actually on the path between them — including the intermediate transformations that are required, but skipping everything that isn't.
+
+### Example
+
+| | Models rebuilt | Time |
+|---|---|---|
+| `dbt build -s fct_payments+` | ~240 | ~45 min |
+| With Impact Tracer | 4 | ~3 min |
+
+```bash
+# Generated command
+dbt build --select fct_payments inter_calc mrr_dashboard
+```
+
+That's a **~98% reduction** during development.
+
+---
+
+## How It Works (Under the Hood)
+
+The tool runs a **two-pass graph traversal** on your dbt dependency graph and takes the intersection:
+
+1. **Forward pass (Source → downstream):**  
+   Starting from each source model, traverse downstream and collect every model reachable from it.
+
+2. **Backward pass (Target → upstream):**  
+   Starting from each target model, traverse upstream and collect every model that feeds into it.
+
+3. **Intersection (source⁺ ∩ ⁺target):**  
+   The models that appear in **both** sets are the ones that lie on a real path between source and target. Everything else is noise that `dbt build -s source+` would unnecessarily rebuild.
+
+This runs in **O(V + E)** time, so it's fast even on projects with 1000+ models.
+
+---
+
+## How to Use It
+
+### Step 1 — Generate your manifest
 
 ```bash
 cd your_dbt_project
 dbt compile
 ```
 
-This creates `target/manifest.json`.
+This creates `target/manifest.json`. It contains your project's full dependency graph.
 
-### Step 2: Upload it
+### Step 2 — Open the app
 
-Open [dbt-impact-tracer.dev](https://dbt-impact-tracer.dev) and upload your manifest.
+Go to **[dbt-impact-tracer.dev](https://dbt-impact-tracer.dev)** and upload `target/manifest.json`.
 
-### Step 3: Select models
+Your manifest **never leaves your browser** — everything runs locally on the client side.
 
-- **Left side:** Check the models you changed (source models)
-- **Right side:** Select the model you want to verify (target model)
+### Step 3 — Select models
 
-### Step 4: Get your command
+You'll see **two panels** side by side:
 
-Click **"Show impact path"** and copy the generated command:
+#### Left panel — Source models (what you changed)
+- Lists every model in your project with a checkbox
+- Tick **one or more** models that you've changed
+- Use the search box to filter through hundreds of models
+
+#### Right panel — Target models (what you want to verify)
+- Same list, with checkboxes
+- Tick **one or more** downstream models you want to test
+- Multi-select is supported — you can verify the impact on several reports at once
+
+### Step 4 — Trace the impact
+
+Click **"Show impact path"** and you'll get:
+
+- 📊 **Stats:** how many models would be rebuilt with `source+` vs. just the impact path
+- 🔀 **Interactive DAG:** color-coded visualization of the dependency chain (sources in blue, intermediates in gray, targets in green)
+- 📋 **Ready-to-copy command:** the optimized `dbt build --select ...`
+
+### Step 5 — Run it
+
+Paste the command into your terminal and run. Done.
 
 ```bash
-dbt build --select fct_payments inter_calc union_mrr
+dbt build --select fct_payments inter_calc mrr_dashboard
 ```
 
-### Step 5: Run it
+### Bonus — Reset and try again
 
-Paste and run. Done.
+- **"Reset selections"** clears your picks but keeps the manifest loaded, so you can quickly explore other source → target combinations without re-uploading
+- **"Upload new manifest"** starts over with a fresh manifest
 
 ---
 
-## Example
+## Why Use This Instead of `dbt build -s model+`
 
-**Without Impact Tracer:**
-```bash
-dbt build -s fct_payments+
-# Rebuilds 240 models
-# Takes 45 minutes
-```
+| `dbt build -s model+` | dbt Impact Tracer |
+|---|---|
+| Rebuilds **everything** downstream | Rebuilds **only what's needed** for your target |
+| No visibility into what'll run | Interactive DAG shows exactly what'll run |
+| Slow during dev iteration | Fast — focused on the path you care about |
+| Hard to plan focused testing | Built for "I want to check X impacts Y" |
 
-**With Impact Tracer:**
-```bash
-dbt build --select fct_payments inter_calc union_mrr
-# Rebuilds 4 models
-# Takes 3 minutes
-```
+This tool isn't a replacement for `dbt build` in production. It's a **development accelerator** for when you're iterating on changes and want fast, targeted feedback.
 
 ---
 
 ## Run Locally (Optional)
 
-If you prefer running it on your machine:
+If you'd rather run it on your own machine:
 
 ```bash
 git clone https://github.com/apto-jkhatri/dbt-impact-tracer.git
@@ -109,29 +157,25 @@ Opens at http://localhost:5173
 
 ---
 
-## How It Works
+## Privacy
 
-The tool uses a two-pass graph traversal:
-
-1. **Backward pass:** From target, find all upstream dependencies
-2. **Forward pass:** From sources, find all downstream models
-3. **Intersection:** Models in both sets = the minimal rebuild path
-
-This runs in O(V+E) time, so it's fast even for 1000+ model projects.
+- ✅ Your `manifest.json` is processed **entirely in your browser**
+- ✅ Nothing is uploaded to any server
+- ✅ No model names, project info, or schema details ever leave your machine
+- ✅ Only anonymous, aggregate page-view stats are collected (via Vercel Web Analytics — no cookies)
 
 ---
 
 ## Contributing
 
-Found a bug or have an idea? Open an issue or submit a PR.
-
+Found a bug or have an idea? Open an issue or submit a PR.  
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
 ---
 
 ## License
 
-MIT License - see [LICENSE](./LICENSE)
+MIT License — see [LICENSE](./LICENSE)
 
 ---
 
@@ -139,7 +183,7 @@ MIT License - see [LICENSE](./LICENSE)
 
 Built for the dbt community.
 
-Special thanks to my coworkers at **Aptologics** who tested this tool and provided valuable feedback during development.
+Special thanks to my coworkers at **Aptologics** who tested this tool during development and gave the early feedback that shaped it.
 
 ---
 
