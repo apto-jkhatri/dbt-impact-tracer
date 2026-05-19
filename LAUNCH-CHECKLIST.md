@@ -143,7 +143,7 @@ git push -u origin main
 1. Go to **Settings → Pages**
 2. Source: Deploy from a branch
 3. Branch: `main` → folder `./docs`
-4. Custom domain: `dbt-impact-tracer.dev` (optional, costs $12/yr)
+4. Custom domain: `dbt-impact-tracer.vercel.app` (optional, costs $12/yr)
 
 ---
 
@@ -191,7 +191,7 @@ Trace impact paths in your dbt project and run only the models you need to rebui
 
 Upload your manifest.json → Select source & target models → Get optimized dbt build command
 
-Demo: https://dbt-impact-tracer.dev
+Demo: https://dbt-impact-tracer.vercel.app/
 GitHub: https://github.com/your-username/dbt-impact-tracer
 npm: npm install -g dbt-impact-tracer
 
@@ -209,7 +209,7 @@ Stop rebuilding 240 models when you only changed 4.
 🎯 Select source & target models
 🚀 Get optimized dbt build command
 
-Zero installation: https://dbt-impact-tracer.dev
+Zero installation: https://dbt-impact-tracer.vercel.app/
 Open source: https://github.com/your-username/dbt-impact-tracer
 
 @getdbt #dataengineering

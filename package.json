@@ -77,7 +77,7 @@
     "type": "git",
     "url": "https://github.com/apto-jkhatri/dbt-impact-tracer.git"
   },
-  "homepage": "https://dbt-impact-tracer.dev",
+  "homepage": "https://dbt-impact-tracer.vercel.app/",
   "bugs": {
     "url": "https://github.com/apto-jkhatri/dbt-impact-tracer/issues"
   },

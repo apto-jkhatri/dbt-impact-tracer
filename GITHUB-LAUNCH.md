@@ -142,7 +142,7 @@ Trace impact paths in your dbt project and run only the models affected by your 
 - Get optimized dbt build command
 - 98% faster builds
 
-🌐 Try it: https://dbt-impact-tracer.dev
+🌐 Try it: https://dbt-impact-tracer.vercel.app/
 📦 npm: npm install -g dbt-impact-tracer
 🔗 GitHub: https://github.com/apto-jkhatri/dbt-impact-tracer
 
@@ -167,7 +167,7 @@ Stop rebuilding 240 models when you only changed 4.
 🚀 Get optimized dbt build command
 ⚡ 98% faster builds
 
-Demo: https://dbt-impact-tracer.dev
+Demo: https://dbt-impact-tracer.vercel.app/
 GitHub: https://github.com/apto-jkhatri/dbt-impact-tracer
 npm: npm install -g dbt-impact-tracer
 

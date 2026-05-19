@@ -113,7 +113,7 @@ npm install dbt-impact-tracer
 3. Publish to npm registry
 
 ### B. Hosted Web App
-**URL:** `https://dbt-impact-tracer.dev` (or similar)
+**URL:** `https://dbt-impact-tracer.vercel.app/` (or similar)
 
 **Pros:**
 - Zero installation needed
@@ -224,7 +224,7 @@ With 100+ dbt models, running `dbt build -s model+` can rebuild 200+ models when
 ## Quick Start
 
 ### Online (No Installation)
-Visit: **[dbt-impact-tracer.dev](https://dbt-impact-tracer.dev)**
+Visit: **[dbt-impact-tracer.vercel.app](https://dbt-impact-tracer.vercel.app/)**
 
 ### Local Installation
 ```bash
@@ -449,7 +449,7 @@ Stop rebuilding 240 models when you only changed 4.
 
 Visualize dependencies, trace impact paths, run only what matters.
 
-Zero installation needed: https://dbt-impact-tracer.dev
+Zero installation needed: https://dbt-impact-tracer.vercel.app/
 
 Open source, MIT licensed, built for the dbt community.
 

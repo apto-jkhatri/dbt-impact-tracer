@@ -2,7 +2,7 @@
 
 > Built for dbt developers. Stop rebuilding hundreds of models when only a few are actually affected by your change.
 
-**[🚀 Try it now — free, no installation](https://dbt-impact-tracer.dev)**
+**[🚀 Try it now — free, no installation](https://dbt-impact-tracer.vercel.app/)**
 
 ---
 
@@ -88,7 +88,7 @@ This creates `target/manifest.json`. It contains your project's full dependency 
 
 ### Step 2 — Open the app
 
-Go to **[dbt-impact-tracer.dev](https://dbt-impact-tracer.dev)** and upload `target/manifest.json`.
+Go to **[dbt-impact-tracer.vercel.app](https://dbt-impact-tracer.vercel.app/)** and upload `target/manifest.json`.
 
 Your manifest **never leaves your browser** — everything runs locally on the client side.
 

@@ -1,6 +1,6 @@
 # Vercel Deployment Guide
 
-Deploy dbt Impact Tracer to Vercel for zero-installation demo at https://dbt-impact-tracer.dev
+Deploy dbt Impact Tracer to Vercel for zero-installation demo at https://dbt-impact-tracer.vercel.app/
 
 ---
 
@@ -74,7 +74,7 @@ vercel
 
 ## Custom Domain Setup
 
-To use `dbt-impact-tracer.dev` instead of `dbt-impact-tracer.vercel.app`:
+To use `dbt-impact-tracer.vercel.app` instead of `dbt-impact-tracer.vercel.app`:
 
 ### 1. Buy Domain
 - Domain registrar (GoDaddy, Namecheap, etc.)
@@ -154,7 +154,7 @@ If PR:
 ## That's It! 🎉
 
 Your app is live at:
-- **Production:** https://dbt-impact-tracer.dev
+- **Production:** https://dbt-impact-tracer.vercel.app/
 - **Staging:** https://dbt-impact-tracer-staging.vercel.app
 
 ---
